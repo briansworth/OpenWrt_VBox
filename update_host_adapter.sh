@@ -20,11 +20,11 @@ uci commit
 # Reload network
 /etc/init.d/network restart
 
-# Review interfaces
-ip link | grep eth2
-# now shows eth2 as 'UP'
+# Wait for network restart before getting interface
+sleep 4
+echo
+echo
 
-# Find IP address
+# Show eth2 interface & IP address
 ip a show eth2
 # should now be able to ssh from this IP address
-
