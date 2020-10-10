@@ -97,8 +97,9 @@ vboxmanage modifyvm $VM_NAME --boot1 disk
 vboxmanage modifyvm $VM_NAME --audio none
 
 # Add network adapters
+host_if=$(vboxmanage list hostonlyifs | grep -E "^Name:\s.+" -m 1 | awk '{ print $2 }')
 vboxmanage modifyvm $VM_NAME --nic1 intnet --intnet1 $NET_NAME
 vboxmanage modifyvm $VM_NAME --nic2 nat
-vboxmanage modifyvm $VM_NAME --nic3 hostonly --hostonlyadapter3 vboxnet0
+vboxmanage modifyvm $VM_NAME --nic3 hostonly --hostonlyadapter3 $host_if
 
 vboxmanage showvminfo $VM_NAME | awk 'NR<=20'

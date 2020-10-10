@@ -182,17 +182,22 @@ Process
     vboxmanage modifyvm $VMName --audio none
 
     # Add network adapters
+    $hostIf = vboxmanage list hostonlyifs |
+      Where-Object {$_ -like 'Name: *'} |
+        Select-Object -First 1
+    $hostIfName = $hostIf.Substring(5, ($hostIf.Length - 5)).Trim()
+
     vboxmanage modifyvm $VMName --nic1 intnet --intnet1 $vmNetName
     vboxmanage modifyvm $VMName --nic2 nat
-    vboxmanage modifyvm $VMName --nic3 hostonly --hostonlyadapter3 vboxnet0
+    vboxmanage modifyvm $VMName --nic3 hostonly --hostonlyadapter3 $hostIfName
 
     vboxmanage showvminfo $VMName | Select-Object -First 20
   }
   Catch [Management.Automation.CommandNotFoundException]
   {
     $emsg = [string]::Format(
-      'Command {0} is not accessible in this session {1} {2}',
-      'vboxmanage',
+      'Command {0} is not accessible in this session. {1} {2}',
+      "'vboxmanage'",
       'Add the directory containing this executable to your',
       'PATH variable and try again'
     )
