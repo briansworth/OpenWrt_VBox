@@ -56,6 +56,7 @@ Param(
 )
 Begin
 {
+  Add-Type -AssemblyName System.Net.Http
   Function Expand-GzipArchive
   {
     [CmdletBinding()]
@@ -203,7 +204,7 @@ Process
     )
     Write-Error -Message $emsg -Exception $_.Exception
   }
-  Catch [Microsoft.PowerShell.Commands.HttpResponseException]
+  Catch [Net.Http.HttpRequestException]
   {
     $emsg = [string]::Format(
       'Failed to download OpenWrt Version: [{0}] Message: {1}',
